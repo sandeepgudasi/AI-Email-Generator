@@ -1,255 +1,263 @@
 # ✉️ AI Email Generator
 
-A full-stack AI-powered email generation application that crafts professional emails using advanced language models. Enter a prompt, select a tone, and get a perfectly written email in seconds.
+> A production-ready AI-powered SaaS application that generates
+> professional emails using Large Language Models (LLMs). Built with
+> **React**, **FastAPI**, and **Python**, the application creates
+> personalized emails in seconds with multiple AI provider support.
 
-![Tech Stack](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+------------------------------------------------------------------------
 
----
+## 📌 Overview
 
-## 🚀 Features
+AI Email Generator helps users generate polished emails for business,
+sales, marketing, HR, customer support, and personal communication.
+Users simply provide a prompt, choose a tone, and the AI generates a
+professional subject line and email body.
 
-### Core
-- **AI-Powered Email Generation** — Generate professional emails from natural language prompts
-- **Tone Selection** — Choose from Professional, Friendly, Formal, or Casual tones
-- **Email Subject Generation** — AI automatically generates a relevant subject line
-- **Responsive UI** — Beautiful dark glassmorphism design that works on all devices
+This project demonstrates full-stack development, REST API design, AI
+integration, clean architecture, and modern UI development.
 
-### Bonus
-- ✅ **Copy to Clipboard** — One-click copy for subject and email body
-- ✅ **Email History** — Persistent history stored in SQLite database
-- ✅ **Multiple AI Providers** — Supports Google Gemini, OpenAI, and OpenRouter
-- ✅ **Example Prompts** — Quick-start chips for common email types
-- ✅ **Error Handling** — Graceful error states with retry options
+------------------------------------------------------------------------
 
----
+## ✨ Features
 
-## 🛠️ Tech Stack
+### Core Features
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 18, Vite, Vanilla CSS |
-| **Backend** | FastAPI, Python 3.10+ |
-| **AI Providers** | Google Gemini, OpenAI, OpenRouter |
-| **Database** | SQLite (via SQLAlchemy) |
-| **HTTP** | Fetch API (frontend), httpx (backend) |
+-   🤖 AI-powered email generation
+-   ✉️ Automatic subject line generation
+-   🎭 Multiple tone selection (Professional, Friendly, Formal, Casual)
+-   ⚡ Fast email generation
+-   📱 Fully responsive interface
+-   🎨 Modern glassmorphism UI
 
----
+### Advanced Features
 
-## 📋 Prerequisites
+-   📋 One-click copy to clipboard
+-   🕘 Persistent email history (SQLite)
+-   🔄 Multiple AI providers
+    -   Google Gemini
+    -   OpenAI
+    -   OpenRouter
+-   💡 Example prompt suggestions
+-   ⚠️ Robust error handling
+-   🔁 Retry support
 
-- **Python** 3.10 or higher
-- **Node.js** 18 or higher
-- **npm** 9 or higher
-- An API key from one of: [Google Gemini](https://aistudio.google.com/apikey), [OpenAI](https://platform.openai.com/api-keys), or [OpenRouter](https://openrouter.ai/keys)
+------------------------------------------------------------------------
 
----
+# 🏗️ System Architecture
 
-## ⚡ Quick Start
-
-### 1. Clone the Repository
-
-```bash
-git clone <repository-url>
-cd Assignment
+``` text
++-------------+
+| React (Vite)|
++------+------+
+       |
+       | REST API
+       v
++------+------+
+| FastAPI API |
++------+------+
+       |
+       +-------------------+
+       |                   |
+       v                   v
+ SQLite Database      AI Provider
+                  (Gemini/OpenAI/OpenRouter)
 ```
 
-### 2. Backend Setup
+------------------------------------------------------------------------
 
-```bash
-# Navigate to backend directory
+# 🛠️ Tech Stack
+
+  Layer      Technology
+  ---------- -----------------------------------
+  Frontend   React 18, Vite, Vanilla CSS
+  Backend    FastAPI, Python 3.10+
+  AI         Google Gemini, OpenAI, OpenRouter
+  Database   SQLite + SQLAlchemy
+  HTTP       Fetch API, httpx
+
+------------------------------------------------------------------------
+
+# 📸 Screenshots
+
+Add screenshots before submitting.
+
+``` text
+screenshots/
+├── home.png
+├── generate.png
+└── history.png
+```
+
+------------------------------------------------------------------------
+
+# 🚀 Getting Started
+
+## Prerequisites
+
+-   Python 3.10+
+-   Node.js 18+
+-   npm 9+
+-   API Key (Gemini/OpenAI/OpenRouter)
+
+## Clone Repository
+
+``` bash
+git clone https://github.com/sandeepgudasi/AI-Email-Generator.git
+cd AI-Email-Generator
+```
+
+------------------------------------------------------------------------
+
+## Backend Setup
+
+``` bash
 cd backend
 
-# Create virtual environment
 python -m venv venv
 
-# Activate virtual environment
-# Windows:
+# Windows
 venv\Scripts\activate
-# macOS/Linux:
+
+# Linux/macOS
 source venv/bin/activate
 
-# Install dependencies
 pip install -r requirements.txt
-
-# Configure environment variables
-cp .env.example .env
-# Edit .env and add your API key
 ```
 
-#### Configure `.env`
+Create `.env`
 
-Edit the `.env` file with your preferred AI provider:
-
-**Option A: Google Gemini (Recommended — Free Tier Available)**
-```env
+``` env
 AI_PROVIDER=gemini
-AI_API_KEY=your-gemini-api-key
+AI_API_KEY=your_api_key
 AI_MODEL=gemini-2.0-flash
+DATABASE_URL=sqlite:///./email_history.db
 ```
 
-**Option B: OpenAI**
-```env
-AI_PROVIDER=openai
-AI_API_KEY=sk-your-openai-key
-AI_MODEL=gpt-4o-mini
-```
+Run backend
 
-**Option C: OpenRouter**
-```env
-AI_PROVIDER=openrouter
-AI_API_KEY=sk-or-your-openrouter-key
-AI_MODEL=google/gemini-2.0-flash-exp:free
-```
-
-#### Start the Backend
-
-```bash
+``` bash
 uvicorn app.main:app --reload --port 8000
 ```
 
-The API will be available at `http://localhost:8000`. Visit `http://localhost:8000/docs` for interactive API documentation.
+API Docs
 
-### 3. Frontend Setup
+http://localhost:8000/docs
 
-Open a **new terminal**:
+------------------------------------------------------------------------
 
-```bash
-# Navigate to frontend directory
+## Frontend Setup
+
+``` bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:5173`.
+Frontend
 
----
+http://localhost:5173
 
-## 📡 API Endpoints
+------------------------------------------------------------------------
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/health` | Health check & provider info |
-| `POST` | `/api/generate` | Generate email from prompt |
-| `GET` | `/api/history` | Get email generation history |
-| `DELETE` | `/api/history/{id}` | Delete a history entry |
-| `DELETE` | `/api/history` | Clear all history |
+# 📡 REST API
 
-### Generate Email — Request Example
+  Method   Endpoint            Description
+  -------- ------------------- ----------------
+  GET      /api/health         Health Check
+  POST     /api/generate       Generate Email
+  GET      /api/history        Fetch History
+  DELETE   /api/history/{id}   Delete Email
+  DELETE   /api/history        Clear History
 
-```json
-POST /api/generate
+Example Request
+
+``` json
 {
-  "prompt": "Write a follow-up email after a job interview",
-  "tone": "professional"
+  "prompt":"Write a cold outreach email for a SaaS analytics product",
+  "tone":"professional"
 }
 ```
 
-### Generate Email — Response Example
+Example Response
 
-```json
+``` json
 {
-  "subject": "Thank You for the Interview Opportunity",
-  "body": "Dear Hiring Manager,\n\nThank you for taking the time to meet with me today...",
-  "provider": "gemini",
-  "model": "gemini-2.0-flash"
+  "subject":"Quick idea for your analytics workflow",
+  "body":"Hi John,...",
+  "provider":"gemini",
+  "model":"gemini-2.0-flash"
 }
 ```
 
----
+------------------------------------------------------------------------
 
-## 📁 Project Structure
+# 📁 Project Structure
 
-```
-Assignment/
+``` text
+AI-Email-Generator/
+│
 ├── backend/
 │   ├── app/
-│   │   ├── __init__.py
-│   │   ├── main.py              # FastAPI application entry point
-│   │   ├── config.py            # Environment configuration
-│   │   ├── database.py          # SQLAlchemy database setup
-│   │   ├── models.py            # ORM models
-│   │   ├── schemas.py           # Pydantic request/response schemas
-│   │   ├── routes/
-│   │   │   ├── email.py         # Email generation & history routes
-│   │   │   └── health.py        # Health check route
-│   │   └── services/
-│   │       ├── ai_service.py    # Multi-provider AI integration
-│   │       └── email_service.py # Business logic layer
 │   ├── requirements.txt
-│   ├── .env.example
-│   └── .env                     # Your local config (git-ignored)
+│   └── .env.example
+│
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx              # Main application component
-│   │   ├── main.jsx             # React entry point
-│   │   ├── index.css            # Design system & global styles
-│   │   ├── components/
-│   │   │   ├── Header.jsx       # App header with branding
-│   │   │   ├── PromptInput.jsx  # Email prompt textarea
-│   │   │   ├── ToneSelector.jsx # Tone selection pills
-│   │   │   ├── EmailDisplay.jsx # Generated email display
-│   │   │   ├── HistorySidebar.jsx # Email history panel
-│   │   │   ├── CopyButton.jsx   # Copy-to-clipboard button
-│   │   │   └── LoadingSpinner.jsx # Loading state indicator
-│   │   ├── hooks/
-│   │   │   └── useEmailGenerator.js # Email generation hook
-│   │   └── services/
-│   │       └── api.js           # Backend API client
-│   ├── index.html
 │   ├── package.json
 │   └── vite.config.js
+│
 └── README.md
 ```
 
----
+------------------------------------------------------------------------
 
-## 🎨 Design Highlights
+# 🔒 Security
 
-- **Dark Glassmorphism Theme** — Semi-transparent cards with backdrop blur
-- **Animated Gradient Accents** — Electric blue to purple gradient throughout
-- **Micro-Animations** — Smooth hover effects, transitions, and loading states
-- **Premium Typography** — Inter for UI, JetBrains Mono for email content
-- **Responsive Layout** — Collapsible sidebar, mobile-optimized controls
-- **Floating Gradient Orbs** — Ambient animated background elements
+-   Environment variables for secrets
+-   API keys excluded from Git
+-   Input validation using Pydantic
+-   SQLAlchemy ORM
+-   Centralized configuration
 
----
+------------------------------------------------------------------------
 
-## 🔧 Environment Variables
+# 💡 Design Decisions
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `AI_PROVIDER` | `gemini` | AI provider (`gemini`, `openai`, `openrouter`) |
-| `AI_API_KEY` | — | Your API key (required) |
-| `AI_MODEL` | `gemini-2.0-flash` | Model identifier |
-| `DATABASE_URL` | `sqlite:///./email_history.db` | Database connection string |
+-   FastAPI for high-performance APIs
+-   React + Vite for fast frontend development
+-   SQLAlchemy for ORM abstraction
+-   Provider abstraction to switch AI providers easily
+-   Modular service architecture for maintainability
 
----
+------------------------------------------------------------------------
 
-## 🧪 Testing
+# 🚀 Future Enhancements
 
-```bash
-# Test backend health
-curl http://localhost:8000/api/health
+-   User authentication
+-   Email templates
+-   Rich text editor
+-   Export to PDF
+-   SMTP integration
+-   Docker support
+-   Unit & integration tests
+-   CI/CD pipeline
 
-# Test email generation
-curl -X POST http://localhost:8000/api/generate \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "Write a thank you email", "tone": "professional"}'
-```
+------------------------------------------------------------------------
 
----
+# 👨‍💻 Author
 
-## 📝 License
+**Sandeep Gudasi**
 
-This project was built as a full-stack developer assignment.
+AI Engineer \| Python Developer
 
----
+GitHub: https://github.com/sandeepgudasi
 
-Built with ❤️ using FastAPI + React + AI
+------------------------------------------------------------------------
+
+# 📄 License
+
+This project was developed as part of a technical assessment and is
+intended for demonstration and evaluation purposes.
+
+If you found this project useful, consider giving it a ⭐ on GitHub.

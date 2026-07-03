@@ -1,8 +1,8 @@
 const TONES = [
-  { value: 'professional', label: 'Professional', emoji: '💼' },
-  { value: 'friendly', label: 'Friendly', emoji: '😊' },
-  { value: 'formal', label: 'Formal', emoji: '📋' },
-  { value: 'casual', label: 'Casual', emoji: '✌️' },
+  { value: 'professional', label: 'Professional' },
+  { value: 'friendly', label: 'Friendly' },
+  { value: 'formal', label: 'Formal' },
+  { value: 'casual', label: 'Casual' },
 ];
 
 export default function ToneSelector({ selected, onSelect }) {
@@ -17,7 +17,6 @@ export default function ToneSelector({ selected, onSelect }) {
             onClick={() => onSelect(tone.value)}
             type="button"
           >
-            <span className="tone-emoji">{tone.emoji}</span>
             <span className="tone-text">{tone.label}</span>
           </button>
         ))}

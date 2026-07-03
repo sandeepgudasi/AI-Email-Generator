@@ -1,4 +1,8 @@
+import { useAuth } from '../hooks/AuthContext';
+
 export default function Header() {
+  const { user, logout } = useAuth();
+
   return (
     <header className="app-header">
       <div className="header-content">
@@ -12,6 +16,13 @@ export default function Header() {
           <h1 className="header-title">AI Email Generator</h1>
           <p className="header-subtitle">Generate professional emails with AI</p>
         </div>
+        {user && (
+          <div className="header-actions" style={{ marginLeft: 'auto' }}>
+            <button className="btn btn-outline" onClick={logout}>
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );

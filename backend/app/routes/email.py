@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.models import User
+from app.routes.auth import get_current_user
 from app.schemas import (
     EmailGenerateRequest,
     EmailGenerateResponse,
@@ -22,6 +24,7 @@ router = APIRouter(tags=["Email"])
 def generate_email(
     request: EmailGenerateRequest,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """Generate an email based on a prompt and desired tone.
 
@@ -29,7 +32,7 @@ def generate_email(
     and returns the generated subject and body.
     """
     try:
-        return email_service.create_email(db, request.prompt, request.tone.value)
+        return email_service.create_email(db, request.prompt, request.tone.value, current_user.id, request.provider, request.model)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
@@ -44,25 +47,30 @@ def get_history(
     skip: int = Query(default=0, ge=0, description="Number of records to skip"),
     limit: int = Query(default=20, ge=1, le=100, description="Max records to return"),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """Retrieve paginated email generation history, newest first."""
-    return email_service.get_history(db, skip=skip, limit=limit)
+    return email_service.get_history(db, current_user.id, skip=skip, limit=limit)
 
 
 @router.delete("/api/history/{item_id}", status_code=204)
 def delete_history_item(
     item_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """Delete a single email history entry by ID."""
-    deleted = email_service.delete_history_item(db, item_id)
+    deleted = email_service.delete_history_item(db, item_id, current_user.id)
     if not deleted:
         raise HTTPException(status_code=404, detail="History item not found")
     return None
 
 
 @router.delete("/api/history", status_code=204)
-def clear_history(db: Session = Depends(get_db)):
+def clear_history(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Delete all email history records."""
-    email_service.clear_history(db)
+    email_service.clear_history(db, current_user.id)
     return None

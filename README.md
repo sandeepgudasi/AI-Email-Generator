@@ -1,152 +1,85 @@
 # ✉️ AI Email Generator
 
-> A production-ready AI-powered SaaS application that generates
-> professional emails using Large Language Models (LLMs). Built with
-> **React**, **FastAPI**, and **Python**, the application creates
-> personalized emails in seconds with multiple AI provider support.
+> A full-stack AI-powered email generation application built with
+> **React**, **FastAPI**, and **Python**. Generate professional emails
+> from natural language prompts using multiple LLM providers with
+> dynamic model selection.
 
-------------------------------------------------------------------------
+## 🚀 Features
 
-## 📌 Overview
-
-AI Email Generator helps users generate polished emails for business,
-sales, marketing, HR, customer support, and personal communication.
-Users simply provide a prompt, choose a tone, and the AI generates a
-professional subject line and email body.
-
-This project demonstrates full-stack development, REST API design, AI
-integration, clean architecture, and modern UI development.
-
-------------------------------------------------------------------------
-
-## ✨ Features
-
-### Core Features
+### Core
 
 -   🤖 AI-powered email generation
--   ✉️ Automatic subject line generation
--   🎭 Multiple tone selection (Professional, Friendly, Formal, Casual)
--   ⚡ Fast email generation
--   📱 Fully responsive interface
--   🎨 Modern glassmorphism UI
+-   ✉️ Automatic subject generation
+-   🎭 Tone selection (Professional, Friendly, Formal, Casual)
+-   📱 Responsive UI
+-   ⚡ FastAPI backend integration
+-   ❌ Error handling
 
-### Advanced Features
+### Advanced
 
--   📋 One-click copy to clipboard
--   🕘 Persistent email history (SQLite)
--   🔄 Multiple AI providers
-    -   Google Gemini
-    -   OpenAI
-    -   OpenRouter
--   💡 Example prompt suggestions
--   ⚠️ Robust error handling
--   🔁 Retry support
+-   📋 Copy to Clipboard
+-   🕘 Email History (SQLite)
+-   🔄 Multiple AI Providers (Gemini, OpenAI, OpenRouter, Ollama)
+-   🧠 Dynamic Model Selection
+-   💡 Example Prompts
 
-------------------------------------------------------------------------
+## 🧠 Supported Providers
 
-# 🏗️ System Architecture
+  Provider         Support
+  ---------------- ---------
+  Google Gemini    ✅
+  OpenAI           ✅
+  OpenRouter       ✅
+  Ollama (Local)   ✅
 
-``` text
-+-------------+
-| React (Vite)|
-+------+------+
-       |
-       | REST API
-       v
-+------+------+
-| FastAPI API |
-+------+------+
-       |
-       +-------------------+
-       |                   |
-       v                   v
- SQLite Database      AI Provider
-                  (Gemini/OpenAI/OpenRouter)
-```
+Users can select both the AI provider and model directly from the UI.
 
-------------------------------------------------------------------------
-
-# 🛠️ Tech Stack
-
-  Layer      Technology
-  ---------- -----------------------------------
-  Frontend   React 18, Vite, Vanilla CSS
-  Backend    FastAPI, Python 3.10+
-  AI         Google Gemini, OpenAI, OpenRouter
-  Database   SQLite + SQLAlchemy
-  HTTP       Fetch API, httpx
-
-------------------------------------------------------------------------
-
-# 📸 Screenshots
-
-Add screenshots before submitting.
+## 🏗️ Architecture
 
 ``` text
-screenshots/
-├── home.png
-├── generate.png
-└── history.png
+React UI
+   │
+   ▼
+FastAPI API
+   │
+   ▼
+AI Service Layer
+   │
+ ┌─┼───────────────┐
+ ▼ ▼       ▼      ▼
+Gemini OpenAI OpenRouter Ollama
+   │
+   ▼
+SQLite
 ```
 
-------------------------------------------------------------------------
+## 🛠️ Tech Stack
 
-# 🚀 Getting Started
+-   Frontend: React 18, Vite, CSS
+-   Backend: FastAPI, Python 3.10+
+-   AI: Gemini, OpenAI, OpenRouter, Ollama
+-   Database: SQLite + SQLAlchemy
 
-## Prerequisites
-
--   Python 3.10+
--   Node.js 18+
--   npm 9+
--   API Key (Gemini/OpenAI/OpenRouter)
-
-## Clone Repository
+## ⚙️ Installation
 
 ``` bash
 git clone https://github.com/sandeepgudasi/AI-Email-Generator.git
 cd AI-Email-Generator
 ```
 
-------------------------------------------------------------------------
-
-## Backend Setup
+### Backend
 
 ``` bash
 cd backend
-
 python -m venv venv
-
 # Windows
 venv\Scripts\activate
-
-# Linux/macOS
-source venv/bin/activate
-
 pip install -r requirements.txt
-```
-
-Create `.env`
-
-``` env
-AI_PROVIDER=gemini
-AI_API_KEY=your_api_key
-AI_MODEL=gemini-2.0-flash
-DATABASE_URL=sqlite:///./email_history.db
-```
-
-Run backend
-
-``` bash
 uvicorn app.main:app --reload --port 8000
 ```
 
-API Docs
-
-http://localhost:8000/docs
-
-------------------------------------------------------------------------
-
-## Frontend Setup
+### Frontend
 
 ``` bash
 cd frontend
@@ -154,110 +87,66 @@ npm install
 npm run dev
 ```
 
-Frontend
+### Environment Examples
 
-http://localhost:5173
-
-------------------------------------------------------------------------
-
-# 📡 REST API
-
-  Method   Endpoint            Description
-  -------- ------------------- ----------------
-  GET      /api/health         Health Check
-  POST     /api/generate       Generate Email
-  GET      /api/history        Fetch History
-  DELETE   /api/history/{id}   Delete Email
-  DELETE   /api/history        Clear History
-
-Example Request
-
-``` json
-{
-  "prompt":"Write a cold outreach email for a SaaS analytics product",
-  "tone":"professional"
-}
+``` env
+AI_PROVIDER=gemini
+AI_API_KEY=your_key
+AI_MODEL=gemini-2.0-flash
 ```
 
-Example Response
-
-``` json
-{
-  "subject":"Quick idea for your analytics workflow",
-  "body":"Hi John,...",
-  "provider":"gemini",
-  "model":"gemini-2.0-flash"
-}
+``` env
+AI_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+AI_MODEL=llama3.2
 ```
 
-------------------------------------------------------------------------
+## ▶️ Usage
 
-# 📁 Project Structure
+1.  Select AI Provider
+2.  Select AI Model
+3.  Enter prompt
+4.  Choose tone
+5.  Generate email
+6.  Copy or review history
 
-``` text
-AI-Email-Generator/
-│
-├── backend/
-│   ├── app/
-│   ├── requirements.txt
-│   └── .env.example
-│
-├── frontend/
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-│
-└── README.md
-```
+## 📡 API
 
-------------------------------------------------------------------------
+-   GET `/api/health`
+-   POST `/api/generate`
+-   GET `/api/history`
+-   DELETE `/api/history/{id}`
+-   DELETE `/api/history`
 
-# 🔒 Security
+## 🔒 Security
 
 -   Environment variables for secrets
--   API keys excluded from Git
--   Input validation using Pydantic
+-   Pydantic validation
 -   SQLAlchemy ORM
--   Centralized configuration
+-   Local LLM support via Ollama
 
-------------------------------------------------------------------------
+## 💡 Design Decisions
 
-# 💡 Design Decisions
+-   FastAPI for performance
+-   React component architecture
+-   Service layer for AI integration
+-   Provider abstraction
+-   Runtime model selection
 
--   FastAPI for high-performance APIs
--   React + Vite for fast frontend development
--   SQLAlchemy for ORM abstraction
--   Provider abstraction to switch AI providers easily
--   Modular service architecture for maintainability
+## 🚀 Future Work
 
-------------------------------------------------------------------------
+-   Authentication
+-   Docker
+-   PostgreSQL
+-   SMTP Integration
+-   CI/CD
 
-# 🚀 Future Enhancements
-
--   User authentication
--   Email templates
--   Rich text editor
--   Export to PDF
--   SMTP integration
--   Docker support
--   Unit & integration tests
--   CI/CD pipeline
-
-------------------------------------------------------------------------
-
-# 👨‍💻 Author
+## 👨‍💻 Author
 
 **Sandeep Gudasi**
 
-AI Engineer \| Python Developer
-
 GitHub: https://github.com/sandeepgudasi
 
-------------------------------------------------------------------------
+## 📄 License
 
-# 📄 License
-
-This project was developed as part of a technical assessment and is
-intended for demonstration and evaluation purposes.
-
-If you found this project useful, consider giving it a ⭐ on GitHub.
+Built as a Full Stack AI Developer technical assessment.

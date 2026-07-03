@@ -1,10 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useEmailGenerator } from './hooks/useEmailGenerator';
+import { useAuth } from './hooks/AuthContext';
 import Header from './components/Header';
 import PromptInput from './components/PromptInput';
 import ToneSelector from './components/ToneSelector';
+import ModelSelector from './components/ModelSelector';
 import EmailDisplay from './components/EmailDisplay';
 import HistorySidebar from './components/HistorySidebar';
+import AuthForm from './components/AuthForm';
 
 function Toast({ message, type, onClose }) {
   return (
@@ -41,8 +44,12 @@ export default function App() {
     selectHistoryItem,
   } = useEmailGenerator();
 
+  const { user, loading: authLoading } = useAuth();
+
   const [prompt, setPrompt] = useState('');
   const [tone, setTone] = useState('professional');
+  const [provider, setProvider] = useState('gemini');
+  const [model, setModel] = useState('gemini-2.0-flash');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [toast, setToast] = useState(null);
 
@@ -56,12 +63,12 @@ export default function App() {
       return;
     }
     try {
-      await generate(prompt, tone);
+      await generate(prompt, tone, provider, model);
       showToast('Email generated successfully!');
     } catch {
       // error state is handled by the hook
     }
-  }, [prompt, tone, generate, showToast]);
+  }, [prompt, tone, provider, model, generate, showToast]);
 
   const handleCopy = useCallback((label) => {
     showToast(`${label} — copied to clipboard!`);
@@ -71,6 +78,8 @@ export default function App() {
     selectHistoryItem(item);
     setPrompt(item.prompt);
     setTone(item.tone);
+    if (item.provider) setProvider(item.provider);
+    if (item.model) setModel(item.model);
     setSidebarOpen(false);
   }, [selectHistoryItem]);
 
@@ -90,6 +99,18 @@ export default function App() {
       showToast('Failed to delete item', 'error');
     }
   }, [removeHistoryItem, showToast]);
+
+  if (authLoading) {
+    return (
+      <div className="app-layout" style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <div className="spinner" style={{ width: '40px', height: '40px', borderWidth: '4px' }}></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <AuthForm />;
+  }
 
   return (
     <div className="app-layout">
@@ -124,6 +145,16 @@ export default function App() {
             <PromptInput
               value={prompt}
               onChange={setPrompt}
+              disabled={loading}
+            />
+
+            <ModelSelector
+              provider={provider}
+              model={model}
+              onModelChange={(newProvider, newModel) => {
+                setProvider(newProvider);
+                setModel(newModel);
+              }}
               disabled={loading}
             />
 

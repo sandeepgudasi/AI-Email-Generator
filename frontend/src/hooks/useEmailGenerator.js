@@ -29,11 +29,11 @@ export function useEmailGenerator() {
     fetchHistory();
   }, [fetchHistory]);
 
-  const generate = useCallback(async (prompt, tone) => {
+  const generate = useCallback(async (prompt, tone, provider, model) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await apiGenerateEmail(prompt, tone);
+      const data = await apiGenerateEmail(prompt, tone, provider, model);
       setEmail(data);
       // Refresh history after generating
       fetchHistory();

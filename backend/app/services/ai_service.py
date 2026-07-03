@@ -5,15 +5,20 @@ from openai import OpenAI
 
 from app.config import get_settings
 
-SYSTEM_PROMPT_TEMPLATE = """You are a professional email writing assistant. Generate an email based on the user's request.
+SYSTEM_PROMPT_TEMPLATE = """You are an expert email writing assistant. Generate an email based on the user's request.
 
-Tone: {tone}
+Crucial Instruction: You MUST strictly adopt a "{tone}" tone for the entire email.
+
+Tone Guidelines:
+- professional: Use formal business language, be direct, clear, and maintain a respectful distance.
+- friendly: Use warm, approachable language, and a positive, conversational style.
+- formal: Use highly respectful, traditional formatting, avoiding contractions and colloquialisms.
+- casual: Use relaxed, everyday language, as if writing to a close colleague or friend.
 
 Rules:
 - Write ONLY the email content
-- Match the requested tone precisely
+- Ensure the "{tone}" tone is obvious from the vocabulary, greeting, and sign-off
 - Be concise and effective
-- Use appropriate greeting and sign-off for the tone
 - Do NOT include any meta-commentary
 
 You MUST respond in this exact JSON format:
@@ -25,12 +30,14 @@ You MUST respond in this exact JSON format:
 Respond ONLY with valid JSON. No markdown, no code blocks, no extra text."""
 
 
-def generate_email(prompt: str, tone: str) -> dict:
-    """Generate an email using the configured AI provider.
+def generate_email(prompt: str, tone: str, provider: str | None = None, model: str | None = None) -> dict:
+    """Generate an email using the specified AI provider and model.
 
     Args:
         prompt: User's description of the email to generate.
         tone: Desired tone (professional, friendly, formal, casual).
+        provider: AI provider to use. Defaults to settings if None.
+        model: AI model to use. Defaults to settings if None.
 
     Returns:
         Dict with 'subject' and 'body' keys.
@@ -40,24 +47,25 @@ def generate_email(prompt: str, tone: str) -> dict:
         Exception: If the AI API call fails.
     """
     settings = get_settings()
-    provider = settings.AI_PROVIDER.lower()
+    actual_provider = (provider or settings.AI_PROVIDER).lower()
+    actual_model = model or settings.AI_MODEL
 
-    if provider == "gemini":
-        return _generate_gemini(prompt, tone, settings)
-    elif provider == "openai":
-        return _generate_openai(prompt, tone, settings)
-    elif provider == "openrouter":
-        return _generate_openrouter(prompt, tone, settings)
-    elif provider == "ollama":
-        return _generate_ollama(prompt, tone, settings)
+    if actual_provider == "gemini":
+        return _generate_gemini(prompt, tone, settings, actual_model)
+    elif actual_provider == "openai":
+        return _generate_openai(prompt, tone, settings, actual_model)
+    elif actual_provider == "openrouter":
+        return _generate_openrouter(prompt, tone, settings, actual_model)
+    elif actual_provider == "ollama":
+        return _generate_ollama(prompt, tone, settings, actual_model)
     else:
-        raise ValueError(f"Unsupported AI provider: {provider}")
+        raise ValueError(f"Unsupported AI provider: {actual_provider}")
 
 
-def _generate_gemini(prompt: str, tone: str, settings) -> dict:
+def _generate_gemini(prompt: str, tone: str, settings, model_name: str) -> dict:
     """Generate email using Google Gemini API."""
     genai.configure(api_key=settings.AI_API_KEY)
-    model = genai.GenerativeModel(settings.AI_MODEL)
+    model = genai.GenerativeModel(model_name)
 
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(tone=tone)
     full_prompt = f"{system_prompt}\n\nUser request: {prompt}"
@@ -66,14 +74,14 @@ def _generate_gemini(prompt: str, tone: str, settings) -> dict:
     return _parse_response(response.text)
 
 
-def _generate_openai(prompt: str, tone: str, settings) -> dict:
+def _generate_openai(prompt: str, tone: str, settings, model_name: str) -> dict:
     """Generate email using OpenAI API."""
     client = OpenAI(api_key=settings.AI_API_KEY)
 
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(tone=tone)
 
     response = client.chat.completions.create(
-        model=settings.AI_MODEL,
+        model=model_name,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt},
@@ -83,7 +91,7 @@ def _generate_openai(prompt: str, tone: str, settings) -> dict:
     return _parse_response(response.choices[0].message.content)
 
 
-def _generate_openrouter(prompt: str, tone: str, settings) -> dict:
+def _generate_openrouter(prompt: str, tone: str, settings, model_name: str) -> dict:
     """Generate email using OpenRouter API (OpenAI-compatible endpoint)."""
     client = OpenAI(
         api_key=settings.AI_API_KEY,
@@ -93,7 +101,7 @@ def _generate_openrouter(prompt: str, tone: str, settings) -> dict:
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(tone=tone)
 
     response = client.chat.completions.create(
-        model=settings.AI_MODEL,
+        model=model_name,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt},
@@ -103,7 +111,7 @@ def _generate_openrouter(prompt: str, tone: str, settings) -> dict:
     return _parse_response(response.choices[0].message.content)
 
 
-def _generate_ollama(prompt: str, tone: str, settings) -> dict:
+def _generate_ollama(prompt: str, tone: str, settings, model_name: str) -> dict:
     """Generate email using local Ollama instance (OpenAI-compatible endpoint)."""
     client = OpenAI(
         api_key="ollama", # API key is not required for Ollama
@@ -113,7 +121,7 @@ def _generate_ollama(prompt: str, tone: str, settings) -> dict:
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(tone=tone)
 
     response = client.chat.completions.create(
-        model=settings.AI_MODEL,
+        model=model_name,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt},
